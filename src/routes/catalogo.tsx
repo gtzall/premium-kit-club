@@ -3,6 +3,8 @@ import { useMemo, useState } from "react";
 import { motion } from "motion/react";
 import { z } from "zod";
 import { Navbar } from "@/components/site/Navbar";
+import { CartDrawer } from "@/components/site/CartDrawer";
+
 import { Footer } from "@/components/site/Footer";
 import { JerseyCard } from "@/components/site/JerseyCard";
 import { categories, products, type Category } from "@/data/products";
