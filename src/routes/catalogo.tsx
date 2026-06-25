@@ -57,6 +57,8 @@ function Catalogo() {
   return (
     <main className="relative min-h-screen bg-background text-foreground">
       <Navbar />
+      <CartDrawer />
+
 
       {/* Header */}
       <section className="relative overflow-hidden border-b border-white/5 pb-12 pt-36 md:pt-44">
