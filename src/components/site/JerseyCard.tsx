@@ -64,8 +64,9 @@ export function JerseyCard({ product, onAddToCart, onSelect, index = 0 }: Props)
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              onAddToCart?.(product);
+              handleAdd(product);
             }}
+
             className="btn-gold flex w-full items-center justify-center gap-2 rounded-full px-4 py-3 text-xs font-semibold uppercase tracking-wider"
           >
             <Plus className="h-3.5 w-3.5" /> Adicionar
