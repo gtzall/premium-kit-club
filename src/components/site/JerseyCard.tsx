@@ -2,6 +2,8 @@ import { motion } from "motion/react";
 import { Plus } from "lucide-react";
 import type { Product } from "@/data/products";
 import { brl } from "@/lib/format";
+import { useCart } from "@/stores/cart";
+import { toast } from "sonner";
 
 interface Props {
   product: Product;
@@ -11,9 +13,19 @@ interface Props {
 }
 
 export function JerseyCard({ product, onAddToCart, onSelect, index = 0 }: Props) {
+  const addToCart = useCart((s) => s.add);
   const discount = product.originalPrice
     ? Math.round((1 - product.price / product.originalPrice) * 100)
     : 0;
+
+  const handleAdd = (p: Product) => {
+    if (onAddToCart) onAddToCart(p);
+    else {
+      addToCart(p);
+      toast.success(`${p.name} adicionado ao carrinho`);
+    }
+  };
+
 
   return (
     <motion.article
