@@ -1,66 +1,50 @@
+## Mudanças
 
-## Mudanças visuais (Home)
+### 1. Footer — remover Newsletter
+Remover a coluna inteira de Newsletter do `Footer.tsx` e ajustar o grid para 3 colunas.
 
-**Navbar**
-- Trocar o "G" placeholder pelo logo real `gn_football_logo.png` (upload via lovable-assets).
-- Remover o texto "GN Football / Premium Jerseys" ao lado — manter só o escudo dentro da pílula glass, no estilo Panenka (logo + links na mesma barra arredondada flutuante centralizada).
+### 2. PromoBanner — fusão real com o resto do site
+Hoje ainda tem `py-28/40` + máscara local que cria uma "ilha". Vou:
+- Remover o background próprio do banner; manter apenas conteúdo.
+- Criar um wrapper único em `routes/index.tsx` que aplica UMA camada de imagem de campo esfumada cobrindo `CategoriesGrid → FeaturedProducts → PromoBanner → FAQ`, com parallax leve e máscara só nas pontas (topo do bloco e base antes do Footer). Resultado: todas as seções compartilham a mesma "atmosfera".
 
-**Hero**
-- Remover badge "Coleção 2025/26 / Edição limitada / Entrega expressa" (eyebrow rotativo).
-- Remover o ticker/marquee superior ("Frete grátis...").
-- Fixar UMA imagem de fundo (a dos jogadores: `jogadores_futebol_limpo.png`) — sem carrossel de slides nem indicadores.
-- Conteúdo central (título + subtítulo + CTAs centralizados), estilo Panenka "THE DUGOUT IS WAITING".
-- Imagem do campo (`hero-field`) passa a aparecer mais abaixo, como transição esfumada para a próxima seção (gradiente vertical, sem corte duro).
+### 3. CMS no site (admin único edita tudo)
+Novas tabelas no banco:
+- `products` — id, slug, name, category, price, original_price, image_url, badges (text[]), featured (bool), active (bool), description, sizes (text[]), stock.
+- `promotions` — id, title, subtitle, discount_label, cta_text, cta_url, image_url, active, sort.
+- `site_settings` — key/value JSON (para textos do hero, etc — opcional, começo só com products + promotions).
+- Bucket de Storage `product-images` (público) para upload de fotos.
 
-**Atmosfera unificada**
-- Remover `BenefitsBar` (faixa "Entrega rápida / Qualidade premium...").
-- Remover `Reviews` ("Vozes da torcida").
-- Substituir bordas/cards sólidos entre seções por gradientes radiais/lineares contínuos, de forma que Hero → Categorias → Destaques → FAQ pareçam a mesma cena esfumada.
+RLS:
+- SELECT público (anon + authenticated) só em rows `active=true`.
+- INSERT/UPDATE/DELETE só para `has_role(auth.uid(),'admin')`.
+- Bucket: leitura pública, escrita só admin.
 
-**FAQ (nova seção)**
-- Componente `FAQ.tsx` no estilo da imagem: título grande "PERGUNTAS FREQUENTES", lista de accordions com fundo translúcido escuro e ícone "+".
-- Perguntas: autenticidade, formas de pagamento, prazo de entrega, troca, como virar VIP, frete grátis.
+Seed: migrar os ~30 produtos atuais de `src/data/products.ts` para a tabela via INSERT.
+Após migração, `FeaturedProducts`, `CategoriesGrid` filtros e `/catalogo` leem do banco (TanStack Query) em vez do array estático. O array vira só fallback de tipos.
 
-**Página dedicada `/jogadores`**
-- Nova rota usando a imagem `jogadores_futebol_limpo.png` em destaque (hero da página) com copy sobre a marca/atletas.
-- Adicionar link "Jogadores" na navbar.
+### 4. Admin — CRUD completo
+Adicionar abas no `/_authenticated/admin`:
+- **Produtos**: tabela com inline edit (preço, destaque, ativo), botão "Novo", modal de edição com upload de imagem direto pro bucket, campos badges/tamanhos/descrição/estoque.
+- **Promoções (banner)**: lista + criar/editar/excluir; toggle ativo controla qual aparece no PromoBanner da home.
+- Manter abas Clientes e Stats.
 
-## Funcionalidades
+### 5. Seção VIP pública na home
+Nova `VipShowcase.tsx` entre `FeaturedProducts` e `PromoBanner`:
+- Headline "Clube GN VIP"
+- 3 cards de vantagens (Drops antecipados, Entrega prioritária, Descontos exclusivos)
+- Critério: 5+ peças compradas vira VIP automaticamente
+- CTA: se logado e não‑VIP → "Faltam X peças"; se VIP → "Você é VIP"; se deslogado → "Entrar / Criar conta"
+- Mesma atmosfera esfumada (sem caixa rígida).
 
-**Carrinho funcional**
-- Store global com Zustand: `useCart` (add, remove, updateQty, clear, totals).
-- `CartDrawer` (shadcn `Sheet`) com lista de itens, subtotal, botão "Finalizar no WhatsApp" (monta mensagem) e botão "Pagar com PIX" (placeholder copy-to-clipboard chave PIX).
-- `JerseyCard` ganha botão "Adicionar"; badge do carrinho no header reflete contagem real.
-- Persistência em `localStorage`.
-
-**Auth (Lovable Cloud) — Admin & VIP**
-- Habilitar email+senha (Google fica para depois para reduzir escopo).
-- Tabelas via migração:
-  - `profiles (id uuid PK = auth.users.id, full_name, total_purchased_items int default 0, created_at)`
-  - `app_role` enum: `admin | vip | user`
-  - `user_roles (id, user_id, role, unique(user_id,role))`
-  - Função `has_role(uuid, app_role)` SECURITY DEFINER.
-  - GRANTs + RLS conforme padrão.
-  - Trigger `handle_new_user` cria profile no signup.
-- Rota `/auth` (login + signup).
-- Rota `/conta` (perfil, contagem de peças compradas, status VIP, vantagens listadas).
-- Rota `/_authenticated/_admin/admin` para painel admin (apenas placeholder de listagem por enquanto, pois CRUD completo é Fase 3).
-- Lógica VIP: a flag de VIP é concedida automaticamente quando `total_purchased_items >= 5` (configurável). Vantagens exibidas: drops antecipados, entrega prioritária, descontos.
+### 6. PromoBanner dinâmico
+Lê a promoção ativa de `promotions` (a primeira `active=true` ordenada por `sort`). Se nenhuma ativa, oculta a seção.
 
 ## Detalhes técnicos
+- Storage: bucket `product-images` público; upload via `supabase.storage.from('product-images').upload(...)` no modal admin; retorna `getPublicUrl`.
+- Queries: `useQuery(['products'])`, `useQuery(['promotion-active'])`, `useQuery(['admin-products'])` separadas. Invalidate após mutation.
+- Tipos: regenerados automaticamente após migração.
 
-- Upload do logo: `lovable-assets create --file /mnt/user-uploads/gn_football_logo.png --filename gn-logo.png > src/assets/gn-logo.png.asset.json`.
-- Upload da imagem jogadores: idem → `src/assets/players-hero.png.asset.json`.
-- `Hero.tsx`: remover state `i`, slides, marquee. Fundo único = players-hero. Adicionar overlay vertical com `hero-field` no rodapé do hero (`absolute bottom-0 h-[60%]` com `mask-image` gradiente para fundir).
-- `useCart` em `src/stores/cart.ts` (Zustand + persist middleware).
-- `src/components/site/CartDrawer.tsx` controlado por estado no Navbar.
-- `src/lib/auth.ts` helpers: `signIn`, `signUp`, `signOut`, `useAuth` hook lendo `onAuthStateChange`.
-- Painel admin atrás de `_authenticated/_admin` checando `has_role(uid,'admin')` via server fn.
-
-## Fora de escopo (próxima fase)
-
-- CRUD completo de produtos no admin (criar/editar/remover do banco) — hoje produtos vivem em `src/data/products.ts`. Vou estruturar o painel já preparado para receber, mas migrar produtos para o banco fica para a Fase 3.
-- Integração real PIX com gateway (hoje será chave estática + comprovante por WhatsApp).
-- Google OAuth (pode ser adicionado depois sem refactor).
-
-Confirma para eu implementar tudo isso?
+## Fora de escopo
+- Editor de textos do hero/FAQ (pode entrar depois via `site_settings`).
+- Checkout real / pagamento PIX (segue WhatsApp + cópia de chave).
