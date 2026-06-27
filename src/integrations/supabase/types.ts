@@ -14,69 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      products: {
-        Row: {
-          active: boolean
-          badges: string[]
-          category: string
-          created_at: string
-          description: string | null
-          featured: boolean
-          id: string
-          image: string
-          league: string | null
-          name: string
-          original_price: number | null
-          price: number
-          sizes: string[]
-          slug: string
-          sort: number
-          stock: number
-          team: string | null
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          badges?: string[]
-          category: string
-          created_at?: string
-          description?: string | null
-          featured?: boolean
-          id: string
-          image: string
-          league?: string | null
-          name: string
-          original_price?: number | null
-          price: number
-          sizes?: string[]
-          slug: string
-          sort?: number
-          stock?: number
-          team?: string | null
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          badges?: string[]
-          category?: string
-          created_at?: string
-          description?: string | null
-          featured?: boolean
-          id?: string
-          image?: string
-          league?: string | null
-          name?: string
-          original_price?: number | null
-          price?: number
-          sizes?: string[]
-          slug?: string
-          sort?: number
-          stock?: number
-          team?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           created_at: string
@@ -100,54 +37,6 @@ export type Database = {
           full_name?: string | null
           id?: string
           total_purchased_items?: number
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      promotions: {
-        Row: {
-          active: boolean
-          created_at: string
-          cta_text: string
-          cta_url: string
-          description: string | null
-          discount_label: string | null
-          eyebrow: string | null
-          highlight: string | null
-          id: string
-          image_url: string | null
-          sort: number
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          active?: boolean
-          created_at?: string
-          cta_text?: string
-          cta_url?: string
-          description?: string | null
-          discount_label?: string | null
-          eyebrow?: string | null
-          highlight?: string | null
-          id?: string
-          image_url?: string | null
-          sort?: number
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          active?: boolean
-          created_at?: string
-          cta_text?: string
-          cta_url?: string
-          description?: string | null
-          discount_label?: string | null
-          eyebrow?: string | null
-          highlight?: string | null
-          id?: string
-          image_url?: string | null
-          sort?: number
-          title?: string
           updated_at?: string
         }
         Relationships: []
