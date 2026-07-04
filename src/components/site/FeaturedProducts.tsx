@@ -1,12 +1,13 @@
 import { motion } from "motion/react";
 import { Link } from "@tanstack/react-router";
 import { JerseyCard } from "./JerseyCard";
-import { featuredProducts } from "@/data/products";
+import { useFeaturedProducts } from "@/data/products";
 import { ArrowRight } from "lucide-react";
 
 export function FeaturedProducts() {
+  const { data: featuredProducts } = useFeaturedProducts();
   return (
-    <section className="relative bg-[color:var(--ink)] py-24 md:py-32">
+    <section className="relative py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-2xl">

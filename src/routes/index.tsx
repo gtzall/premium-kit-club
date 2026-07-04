@@ -4,6 +4,7 @@ import { Hero } from "@/components/site/Hero";
 import { CategoriesGrid } from "@/components/site/CategoriesGrid";
 import { FeaturedProducts } from "@/components/site/FeaturedProducts";
 import { PromoBanner } from "@/components/site/PromoBanner";
+import { VipDrops } from "@/components/site/VipDrops";
 import { FAQ } from "@/components/site/FAQ";
 import { Footer } from "@/components/site/Footer";
 import { CartDrawer } from "@/components/site/CartDrawer";
@@ -33,11 +34,11 @@ function Home() {
       <Navbar />
       <CartDrawer />
       <Hero />
-      {/* Fused atmosphere — no rigid section bars */}
       <div className="relative">
         <CategoriesGrid />
         <FeaturedProducts />
         <PromoBanner />
+        <VipDrops />
         <FAQ />
       </div>
       <Footer />

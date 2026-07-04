@@ -1,0 +1,1 @@
+ALTER TABLE public.promotions ADD COLUMN IF NOT EXISTS vip_only boolean NOT NULL DEFAULT false;
