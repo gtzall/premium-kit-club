@@ -1,8 +1,12 @@
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import type { MouseEvent } from "react";
 import heroField from "@/assets/hero-field.png.asset.json";
+import { usePromotions } from "@/lib/promotions";
 
 export function PromoBanner() {
+  const { data: promos } = usePromotions({ vipOnly: false });
+  const promo = promos?.[0];
+
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const sx = useSpring(x, { stiffness: 80, damping: 18 });
@@ -21,15 +25,16 @@ export function PromoBanner() {
     y.set(0);
   };
 
+  if (!promo) return null;
+
   return (
     <section
       onMouseMove={onMove}
       onMouseLeave={onLeave}
       className="relative isolate overflow-hidden py-28 md:py-40"
     >
-      {/* Fused background — same atmospheric image, masked to bleed into siblings */}
       <motion.img
-        src={heroField.url}
+        src={promo.image_url || heroField.url}
         alt=""
         aria-hidden
         style={{ x: tx, y: ty, scale: 1.15 }}
@@ -53,32 +58,38 @@ export function PromoBanner() {
         className="relative mx-auto grid max-w-7xl gap-10 px-5 md:grid-cols-[1.2fr_1fr] md:px-8"
       >
         <div>
-          <div className="mb-4 text-xs uppercase tracking-[0.3em] text-[color:var(--gold-soft)]">
-            03 — Drop limitado
-          </div>
+          {promo.eyebrow && (
+            <div className="mb-4 text-xs uppercase tracking-[0.3em] text-[color:var(--gold-soft)]">
+              {promo.eyebrow}
+            </div>
+          )}
           <h3 className="font-display text-4xl font-black leading-[1.05] md:text-6xl">
-            Brasil <span className="text-gold-gradient italic">2026</span>
-            <br />
-            modelo jogador.
+            {promo.title}{" "}
+            {promo.highlight && <span className="text-gold-gradient italic">{promo.highlight}</span>}
           </h3>
-          <p className="mt-6 max-w-md text-muted-foreground">
-            De R$ 500,00 por <span className="font-bold text-foreground">R$ 175,00</span>. Estoque
-            reduzido. Quando acabar, acabou.
-          </p>
+          {promo.description && (
+            <p className="mt-6 max-w-md text-muted-foreground whitespace-pre-line">
+              {promo.description}
+            </p>
+          )}
           <div className="mt-8 flex flex-wrap gap-4">
             <a
-              href="https://wa.me/5511960385479?text=Quero%20a%20camisa%20do%20Brasil%202026"
+              href={promo.cta_url}
+              target="_blank"
+              rel="noreferrer"
               className="btn-gold inline-flex items-center rounded-full px-7 py-3 text-sm font-semibold uppercase tracking-wider"
             >
-              Garantir a minha
+              {promo.cta_text}
             </a>
           </div>
         </div>
-        <div className="hidden items-end justify-end md:flex">
-          <div className="font-display text-[12rem] font-black leading-none text-[color:var(--gold)]/15">
-            −65%
+        {promo.discount_label && (
+          <div className="hidden items-end justify-end md:flex">
+            <div className="font-display text-[12rem] font-black leading-none text-[color:var(--gold)]/15">
+              {promo.discount_label}
+            </div>
           </div>
-        </div>
+        )}
       </motion.div>
     </section>
   );

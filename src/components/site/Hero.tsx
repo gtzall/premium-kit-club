@@ -56,21 +56,20 @@ export function Hero() {
         </motion.div>
       </div>
 
-      {/* Field image fused at the bottom — smoke transition into the rest of the site */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[55%]">
+      {/* Field image fused at the bottom — smoke transition bleeding past the hero */}
+      <div className="pointer-events-none absolute inset-x-0 -bottom-40 z-0 h-[75%]">
         <img
           src={heroField.url}
           alt=""
           aria-hidden
-          className="h-full w-full object-cover object-top opacity-90"
+          className="h-full w-full object-cover object-top opacity-80"
           style={{
             maskImage:
-              "linear-gradient(to bottom, transparent 0%, black 35%, black 80%, transparent 100%)",
+              "linear-gradient(to bottom, transparent 0%, black 30%, black 65%, transparent 100%)",
             WebkitMaskImage:
-              "linear-gradient(to bottom, transparent 0%, black 35%, black 80%, transparent 100%)",
+              "linear-gradient(to bottom, transparent 0%, black 30%, black 65%, transparent 100%)",
           }}
         />
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-b from-transparent to-[color:var(--background)]" />
       </div>
     </section>
   );

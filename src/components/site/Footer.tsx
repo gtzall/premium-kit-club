@@ -4,7 +4,7 @@ import { Link } from "@tanstack/react-router";
 export function Footer() {
   return (
     <footer className="relative overflow-hidden border-t border-white/5 bg-[color:var(--ink)]">
-      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:px-8">
+      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 md:grid-cols-3 md:px-8">
         <div>
           <div className="font-display text-3xl font-black leading-tight">
             GN <span className="text-gold-gradient italic">Football.</span>
@@ -33,22 +33,8 @@ export function Footer() {
             <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-[color:var(--gold)]" /> Guarulhos, SP</li>
           </ul>
         </div>
-
-        <div>
-          <div className="mb-4 text-xs uppercase tracking-[0.3em] text-[color:var(--gold-soft)]">Newsletter</div>
-          <p className="text-sm text-muted-foreground">Receba drops e cupons antes de todo mundo.</p>
-          <form className="mt-4 flex gap-2" onSubmit={(e) => e.preventDefault()}>
-            <input
-              type="email"
-              placeholder="seu@email.com"
-              className="min-w-0 flex-1 rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm outline-none placeholder:text-muted-foreground focus:border-[color:var(--gold)]/60"
-            />
-            <button className="btn-gold rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider">OK</button>
-          </form>
-        </div>
       </div>
 
-      {/* Giant logotype */}
       <div className="pointer-events-none select-none overflow-hidden border-t border-white/5">
         <div className="font-display text-[clamp(5rem,18vw,16rem)] font-black leading-none tracking-tighter text-white/[0.04] text-center -mt-8">
           GN FOOTBALL

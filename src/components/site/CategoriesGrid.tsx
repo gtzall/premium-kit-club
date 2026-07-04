@@ -1,9 +1,10 @@
 import { motion } from "motion/react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { categories, products } from "@/data/products";
+import { categories, useProducts } from "@/data/products";
 
 export function CategoriesGrid() {
+  const { data: products = [] } = useProducts();
   return (
     <section className="relative mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
       <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
