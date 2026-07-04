@@ -119,6 +119,7 @@ export type Database = {
           sort: number
           title: string
           updated_at: string
+          vip_only: boolean
         }
         Insert: {
           active?: boolean
@@ -134,6 +135,7 @@ export type Database = {
           sort?: number
           title: string
           updated_at?: string
+          vip_only?: boolean
         }
         Update: {
           active?: boolean
@@ -149,6 +151,7 @@ export type Database = {
           sort?: number
           title?: string
           updated_at?: string
+          vip_only?: boolean
         }
         Relationships: []
       }
