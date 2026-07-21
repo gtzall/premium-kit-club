@@ -7,11 +7,20 @@ import { CartDrawer } from "@/components/site/CartDrawer";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Entrar — GN Football" }] }),
+  validateSearch: (s: Record<string, unknown>) => ({
+    next: typeof s.next === "string" ? s.next : "",
+  }),
   component: AuthPage,
 });
 
+function isSafeNext(next: string): boolean {
+  return next.startsWith("/") && !next.startsWith("//");
+}
+
 function AuthPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
+  const safeNext = next && isSafeNext(next) ? next : "";
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,12 +31,15 @@ function AuthPage() {
     e.preventDefault();
     setLoading(true);
     try {
+      const returnTo = safeNext
+        ? `${window.location.origin}${safeNext}`
+        : window.location.origin;
       if (mode === "signup") {
         const { error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            emailRedirectTo: window.location.origin,
+            emailRedirectTo: returnTo,
             data: { full_name: name },
           },
         });
@@ -37,6 +49,10 @@ function AuthPage() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success("Login realizado.");
+      }
+      if (safeNext) {
+        window.location.href = safeNext;
+        return;
       }
       navigate({ to: "/conta" });
     } catch (err) {
