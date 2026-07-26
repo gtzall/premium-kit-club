@@ -3,11 +3,29 @@ import { Link } from "@tanstack/react-router";
 import { JerseyCard } from "./JerseyCard";
 import { useFeaturedProducts } from "@/data/products";
 import { ArrowRight } from "lucide-react";
+import heroField from "@/assets/hero-field.png.asset.json";
 
 export function FeaturedProducts() {
   const { data: featuredProducts } = useFeaturedProducts();
   return (
-    <section className="relative py-24 md:py-32">
+    <section className="relative overflow-hidden py-24 md:py-32">
+      {/* Atmospheric field bleed on the left, fades everywhere */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.12]"
+        style={{
+          backgroundImage: `url(${heroField.url})`,
+          backgroundSize: "cover",
+          backgroundPosition: "left bottom",
+          maskImage:
+            "radial-gradient(ellipse at 15% 70%, black 0%, transparent 70%), linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse at 15% 70%, black 0%, transparent 70%), linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)",
+          maskComposite: "intersect",
+          WebkitMaskComposite: "source-in",
+        }}
+      />
+
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-2xl">
