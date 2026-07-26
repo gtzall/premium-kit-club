@@ -9,12 +9,20 @@ function supabaseForUser(ctx: ToolContext) {
   });
 }
 
+// Allow only URL-safe slug/id characters — blocks PostgREST filter injection via .or()
+const SAFE = /^[a-zA-Z0-9_-]+$/;
+
 export default defineTool({
   name: "get_product",
   title: "Get product",
   description: "Fetch a single product by slug or id, including price, stock, sizes, and description.",
   inputSchema: {
-    slug_or_id: z.string().describe("The product slug or id."),
+    slug_or_id: z
+      .string()
+      .min(1)
+      .max(128)
+      .regex(SAFE, "Only letters, numbers, hyphen and underscore are allowed.")
+      .describe("The product slug or id."),
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ slug_or_id }, ctx) => {
@@ -22,13 +30,12 @@ export default defineTool({
       return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
     }
     const sb = supabaseForUser(ctx);
-    const { data, error } = await sb
-      .from("products")
-      .select("*")
-      .or(`slug.eq.${slug_or_id},id.eq.${slug_or_id}`)
-      .eq("active", true)
-      .maybeSingle();
-    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    // Two safe equality queries instead of .or() with a user-built expression.
+    const [bySlug, byId] = await Promise.all([
+      sb.from("products").select("*").eq("slug", slug_or_id).eq("active", true).maybeSingle(),
+      sb.from("products").select("*").eq("id", slug_or_id).eq("active", true).maybeSingle(),
+    ]);
+    const data = bySlug.data ?? byId.data;
     if (!data) return { content: [{ type: "text", text: "Product not found" }], isError: true };
     return {
       content: [{ type: "text", text: JSON.stringify(data) }],
