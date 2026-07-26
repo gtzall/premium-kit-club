@@ -4,6 +4,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import playersHero from "@/assets/players-hero.png.asset.json";
+
 
 const faqs = [
   {
@@ -34,8 +36,25 @@ const faqs = [
 
 export function FAQ() {
   return (
-    <section className="relative py-24 md:py-32">
-      <div className="mx-auto max-w-3xl px-5 md:px-8">
+    <section className="relative overflow-hidden py-24 md:py-32">
+      {/* Players bleed on the right — same smoke aesthetic */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.10]"
+        style={{
+          backgroundImage: `url(${playersHero.url})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          maskImage:
+            "radial-gradient(ellipse at 50% 50%, black 0%, transparent 75%), linear-gradient(to bottom, transparent, black 25%, black 75%, transparent)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse at 50% 50%, black 0%, transparent 75%), linear-gradient(to bottom, transparent, black 25%, black 75%, transparent)",
+          maskComposite: "intersect",
+          WebkitMaskComposite: "source-in",
+        }}
+      />
+      <div className="relative mx-auto max-w-3xl px-5 md:px-8">
+
         <h2 className="text-center font-display text-4xl font-black uppercase leading-[1.05] md:text-6xl">
           Perguntas <span className="text-gold-gradient italic">frequentes</span>
         </h2>

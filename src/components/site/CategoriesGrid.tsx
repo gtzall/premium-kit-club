@@ -2,11 +2,30 @@ import { motion } from "motion/react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { categories, useProducts } from "@/data/products";
+import playersHero from "@/assets/players-hero.png.asset.json";
 
 export function CategoriesGrid() {
   const { data: products = [] } = useProducts();
   return (
-    <section className="relative mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
+    <section className="relative overflow-hidden">
+      {/* Continuation bleed from Hero — players silhouette fading in from the right */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.14]"
+        style={{
+          backgroundImage: `url(${playersHero.url})`,
+          backgroundSize: "cover",
+          backgroundPosition: "right center",
+          maskImage:
+            "radial-gradient(ellipse at 80% 40%, black 0%, transparent 65%), linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse at 80% 40%, black 0%, transparent 65%), linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)",
+          maskComposite: "intersect",
+          WebkitMaskComposite: "source-in",
+        }}
+      />
+      <div className="relative mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
+
       <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
         <div className="max-w-2xl">
           <div className="mb-3 text-xs uppercase tracking-[0.3em] text-[color:var(--gold-soft)]">
@@ -63,6 +82,7 @@ export function CategoriesGrid() {
             </motion.div>
           );
         })}
+      </div>
       </div>
     </section>
   );

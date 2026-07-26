@@ -6,7 +6,7 @@ import heroField from "@/assets/hero-field.png.asset.json";
 
 export function Hero() {
   return (
-    <section className="relative isolate min-h-[100svh] w-full overflow-hidden">
+    <section className="relative isolate min-h-[100svh] w-full overflow-visible">
       {/* Single fixed background — players */}
       <div className="absolute inset-0 -z-10">
         <img
@@ -56,21 +56,24 @@ export function Hero() {
         </motion.div>
       </div>
 
-      {/* Field image fused at the bottom — smoke transition bleeding past the hero */}
-      <div className="pointer-events-none absolute inset-x-0 -bottom-40 z-0 h-[75%]">
+      {/* Field image fused at the bottom — bleeds into the next section with a long smoke transition */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-[-55vh] z-0 h-[110vh]">
         <img
           src={heroField.url}
           alt=""
           aria-hidden
-          className="h-full w-full object-cover object-top opacity-80"
+          className="h-full w-full object-cover object-top opacity-90"
           style={{
             maskImage:
-              "linear-gradient(to bottom, transparent 0%, black 30%, black 65%, transparent 100%)",
+              "linear-gradient(to bottom, transparent 0%, black 22%, black 55%, transparent 95%)",
             WebkitMaskImage:
-              "linear-gradient(to bottom, transparent 0%, black 30%, black 65%, transparent 100%)",
+              "linear-gradient(to bottom, transparent 0%, black 22%, black 55%, transparent 95%)",
           }}
         />
+        {/* Extra bottom fade into the page background */}
+        <div className="absolute inset-x-0 bottom-0 h-[45vh] bg-gradient-to-b from-transparent to-background" />
       </div>
+
     </section>
   );
 }
