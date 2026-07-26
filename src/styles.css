@@ -201,3 +201,7 @@
 @utility marquee {
   animation: ticker 40s linear infinite;
 }
+
+#lovable-badge {
+  display: none !important;
+}
