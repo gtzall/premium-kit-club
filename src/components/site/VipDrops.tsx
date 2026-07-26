@@ -3,21 +3,37 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { usePromotions } from "@/lib/promotions";
 import { useAuth } from "@/hooks/use-auth";
+import heroStadium from "@/assets/hero-stadium.png.asset.json";
 
 export function VipDrops() {
   const { user, isVip } = useAuth();
   const { data: drops } = usePromotions({ vipOnly: true });
 
   return (
-    <section className="relative py-24 md:py-32">
+    <section className="relative overflow-hidden py-24 md:py-32">
+      {/* Integrated stadium backdrop — bleeds into surrounding sections via soft gradient masks */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat opacity-[0.18]"
+        style={{
+          backgroundImage: `url(${heroStadium.url})`,
+          maskImage:
+            "radial-gradient(ellipse at 50% 50%, black 40%, transparent 85%), linear-gradient(to bottom, transparent, black 25%, black 75%, transparent)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse at 50% 50%, black 40%, transparent 85%), linear-gradient(to bottom, transparent, black 25%, black 75%, transparent)",
+          maskComposite: "intersect",
+          WebkitMaskComposite: "source-in",
+        }}
+      />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
           background:
-            "radial-gradient(ellipse at 70% 40%, oklch(0.20 0.08 85 / 0.25) 0%, transparent 65%)",
+            "radial-gradient(ellipse at 70% 40%, oklch(0.20 0.08 85 / 0.35) 0%, transparent 65%), linear-gradient(to bottom, var(--background) 0%, transparent 15%, transparent 85%, var(--background) 100%)",
         }}
       />
+
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-2xl">
